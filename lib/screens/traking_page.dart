@@ -33,14 +33,23 @@ class _TrackingPageState extends State<TrackingPage>
   Stream<List<Marker>> get mapMarkerStream => _mapMarkerSC.stream;
 
   static const LatLng sourceLocation =
-      LatLng(37.42796133580664, -122.085749655962);
-  static const LatLng destination = LatLng(37.428714, -122.078301);
+      LatLng(18.80174418695366, 98.94884560697534);
+  static const LatLng destination = LatLng(18.80649067310619, 98.95220414379344);
 
   late final AnimationController animationController;
 
   @override
   void initState() {
+    prepareMarker();
     super.initState();
+  }
+  Future<void> prepareMarker() async{
+    Future.delayed(const Duration(milliseconds: 500)).then((value) {
+      getCurrentLocation();
+      runMap(
+        sourceLocation, 
+        destination, _mapMarkerSink, this, _controller);
+    },);
   }
 
   @override
@@ -234,17 +243,17 @@ class _TrackingPageState extends State<TrackingPage>
     location.onLocationChanged.listen(
       (newLoc) {
         currentLocation = newLoc;
-        // googleMapController.animateCamera(
-        //   CameraUpdate.newCameraPosition(
-        //     CameraPosition(
-        //       zoom: 13.5,
-        //       target: LatLng(
-        //         newLoc.latitude!,
-        //         newLoc.longitude!,
-        //       ),
-        //     ),
-        //   ),
-        // );
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 13.5,
+              target: LatLng(
+                newLoc.latitude!,
+                newLoc.longitude!,
+              ),
+            ),
+          ),
+        );
         setState(() {});
       },
     );
